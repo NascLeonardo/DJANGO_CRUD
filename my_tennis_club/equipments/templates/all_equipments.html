@@ -1,0 +1,14 @@
+{% extends "master.html" %}
+
+{% block title %}
+  My Tennis Club
+{% endblock title %}
+
+{% block content %}
+  <h1>Equipments</h1>
+  <ul>
+      {% for x in myequipments %}
+      <li><a href="/equipments/details/{{x.id}}">{{x.name}} - {{x.quantity}}</a></li>
+      {% endfor %}
+  </ul>
+{% endblock content %}

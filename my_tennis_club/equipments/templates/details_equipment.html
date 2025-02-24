@@ -1,0 +1,15 @@
+{% extends "master.html" %}
+
+{% block title %}
+  My Tennis Club
+{% endblock title %}
+
+{% block content %}
+  <h1>Equipment Detail: {{myequipment.name}}</h1>
+
+  <p>Description: {{myequipment.description}}</p>
+  <p>Quantity: {{myequipment.quantity}}</p>
+
+  <p>Back to <a href="/equipments/all">Equipments</a></p>
+
+{% endblock content %}
