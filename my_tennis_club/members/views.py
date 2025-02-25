@@ -1,5 +1,6 @@
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from .models import Member
 
 def members(request):
@@ -24,9 +25,67 @@ def main(request):
 
 def new_member(request):
     template = loader.get_template('new_member.html')
-    return HttpResponse(template.render())
+    return HttpResponse(template.render({}, request))
 
     
 
-def create_member(request, firstname, lastname, phone):
-    return HttpResponseRedirect('/members')
+def create_member(request):
+    errors = []
+    if 'firstname' not in request.POST or request.POST['firstname'] == '':
+        errors.append("Firstname can't be empty!")
+    else:
+        firstname   = request.POST['firstname']
+
+    if 'lastname' not in request.POST or request.POST['lastname'] == '':
+        errors.append("Lastname can't be empty!")
+    else:
+        lastname   = request.POST['lastname']
+    
+    if 'phone' not in request.POST or request.POST['phone'] == '':
+        errors.append("Phone can't be empty!")
+    else:
+        phone   = request.POST['phone']
+        if Member.objects.filter(phone=phone).exists():
+            errors.append("Phone number already exists!")
+
+        
+    
+    # Check if there's any members with the same phone number
+    
+
+    if len(errors) > 0:
+        context =  {
+            'errors': errors
+        }
+        template = loader.get_template('new_member.html')
+        return HttpResponse(template.render(context,request))
+    else:
+        member = Member(firstname=firstname, lastname=lastname, phone=phone)
+        member.save()
+        return HttpResponseRedirect(reverse('members'))
+
+def delete(request, id):
+    mymember = Member.objects.get(id=id)
+    mymember.delete()
+
+    return HttpResponseRedirect(reverse('members'))
+
+def update(request, id):
+    mymember = Member.objects.get(id=id)
+    template = loader.get_template('update.html')
+    context =  {
+        'mymember': mymember
+    }
+    return HttpResponse(template.render(context,request))
+
+def update_member(request, id):
+    mymember = Member.objects.get(id=id)
+    mymember.firstname = request.POST['firstname']
+    mymember.lastname = request.POST['lastname']
+    mymember.phone = request.POST['phone']
+
+
+    mymember.save()
+    template = loader.get_template('update.html')
+
+    return HttpResponseRedirect(reverse('members'))

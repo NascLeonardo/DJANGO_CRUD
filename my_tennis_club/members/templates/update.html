@@ -6,36 +6,24 @@
 
 {% block content %}
 
-{% if errors|length > 0 %}
-
-<div class="alert alert-danger" role="alert">
-  <h4 class="alert-heading">Please, correct these informations, and try again!</h4>
-  <hr>
-  {% for error in errors %}
-    <p class="mb-0 mb-1"> - {{ error }} </p>
-  {% endfor %}
-</div>
-
-{% endif %}
-
 <div class="card">
   <div class="card-header">
-    New Member
+    Update Member
   </div>
   <div class="card-body">
-    <form action="/members/new_member/save" method="POST">
+    <form action="/members/update/{{mymember.id}}/save" method="POST">
         {% csrf_token %}
         <div class="mb-3">
             <label for="firstname" class="form-label">Firstname</label>
-            <input type="text" class="form-control" name="firstname" id="firstname" placeholder="John">
+            <input type="text" class="form-control" name="firstname" id="firstname" value={{mymember.firstname}} placeholder="John">
         </div>
         <div class="mb-3">
             <label for="lastname" class="form-label">Lastname</label>
-            <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Doe">
+            <input type="text" class="form-control" name="lastname" id="lastname" value={{mymember.lastname}} placeholder="Doe">
         </div>
         <div class="mb-3">
             <label for="phone" class="form-label">Phone</label>
-            <input type="text" class="form-control" name="phone" id="phone" placeholder="40028922">
+            <input type="text" class="form-control" name="phone" id="phone" value={{mymember.phone}} placeholder="4002-8922">
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3">Confirm</button>

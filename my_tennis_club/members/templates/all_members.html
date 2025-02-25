@@ -13,9 +13,13 @@
   <div class="card-body">
     <ul class="list-group">
       {% for x in mymembers %}
-      <li class="list-group-item"><a href="details/{{x.id}}">{{x.firstname}} {{x.lastname}}</a></li>
+      <li class="list-group-item"><a href="details/{{x.id}}">{{x.firstname}} {{x.lastname}}</a>
+        <span class="float-end"><a href="/members/update/{{x.id}}"><i class="fa-solid fa-pencil text-warning mx-3"></i></a></span>
+        <span class="float-end"><a href="/members/delete/{{x.id}}"><i class="fa-solid fa-trash-can text-danger"></i></a></span>
+      </li>
       {% endfor %}
     </ul>
+    <a href="new_member" class="btn btn-primary mt-3">Add a new member</a>
   </div>
 </div>
 
