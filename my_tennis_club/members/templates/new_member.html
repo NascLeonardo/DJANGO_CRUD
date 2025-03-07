@@ -26,6 +26,14 @@
     <form action="/members/new_member/save" method="POST">
         {% csrf_token %}
         <div class="mb-3">
+            <label for="plan" class="form-label">Select Plan</label>
+            <select class="form-select" id="plan" name="plan">
+              {% for x in myplans %}
+              <option value="{{ x.id }}">{{ x.title }}</option>
+              {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
             <label for="firstname" class="form-label">Firstname</label>
             <input type="text" class="form-control" name="firstname" id="firstname" placeholder="John">
         </div>

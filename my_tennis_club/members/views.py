@@ -2,6 +2,7 @@ from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from .models import Member
+from .models import Plan
 
 def members(request):
     mymembers = Member.objects.all().values()
@@ -24,8 +25,12 @@ def main(request):
     return HttpResponse(template.render())
 
 def new_member(request):
+    myplans = Plan.objects.all().values()
     template = loader.get_template('new_member.html')
-    return HttpResponse(template.render({}, request))
+    context = {
+        'myplans': myplans
+    }
+    return HttpResponse(template.render(context, request))
 
     
 
@@ -47,7 +52,10 @@ def create_member(request):
         phone   = request.POST['phone']
         if Member.objects.filter(phone=phone).exists():
             errors.append("Phone number already exists!")
-
+    if 'plan' not in request.POST or request.POST['plan'] == '':
+        errors.append("Plan can't be empty!")
+    else:
+        plan   = Plan.objects.filter(id=request.POST['plan']).first()
         
     
     # Check if there's any members with the same phone number
@@ -60,7 +68,7 @@ def create_member(request):
         template = loader.get_template('new_member.html')
         return HttpResponse(template.render(context,request))
     else:
-        member = Member(firstname=firstname, lastname=lastname, phone=phone)
+        member = Member(firstname=firstname, lastname=lastname, phone=phone, plan=plan)
         member.save()
         return HttpResponseRedirect(reverse('members'))
 
@@ -71,10 +79,12 @@ def delete(request, id):
     return HttpResponseRedirect(reverse('members'))
 
 def update(request, id):
+    myplans = Plan.objects.all().values()
     mymember = Member.objects.get(id=id)
     template = loader.get_template('update.html')
     context =  {
-        'mymember': mymember
+        'mymember': mymember,
+        'myplans': myplans
     }
     return HttpResponse(template.render(context,request))
 
@@ -83,6 +93,7 @@ def update_member(request, id):
     mymember.firstname = request.POST['firstname']
     mymember.lastname = request.POST['lastname']
     mymember.phone = request.POST['phone']
+    mymember.plan = Plan.objects.filter(id=request.POST['plan']).first()
 
 
     mymember.save()
